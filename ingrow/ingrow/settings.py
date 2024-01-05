@@ -18,9 +18,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
+import json
+import os
+from django.core.exceptions import ImproperlyConfigured
 
+with open(os.path.join(BASE_DIR, 'secrets.json')) as secrets_file:
+    secrets = json.load(secrets_file)
+
+def get_secret(setting, secrets=secrets):
+    """Get secret setting or fail with ImproperlyConfigured"""
+    try:
+        return secrets[setting]
+    except KeyError:
+        raise ImproperlyConfigured("Set the {} setting".format(setting))
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-5ewb$(mrs2jha)03^cw==^-6chq7$p60#8s#gc@9*5=shqgyh7'
+SECRET_KEY = get_secret('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -86,9 +98,9 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "ingrow",
         "USER": "postgres",
-        "PASSWORD": "mosabarista",
-        "HOST": "localhost",
-        "PORT": "5432"
+        "PASSWORD": get_secret('DB_PASSWORD'),
+        "HOST": get_secret('DB_HOST'),
+        "PORT": "30866"
     }
 }
 
