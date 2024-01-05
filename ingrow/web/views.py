@@ -16,8 +16,8 @@ def create_customer(request):
     phone_number = request.POST['phone_number']
     address = request.POST['address']
     cur.execute("""INSERT INTO public.web_customers
-                (national_id, name, phone_number, address)
-                VALUES ('{}', '{}', '{}', '{}');""".format(national_id, name, phone_number, address))
+                (national_id, name, phone_number, address)VALUES 
+                ('{}', '{}', '{}', '{}');""".format(national_id, name, phone_number, address))
     cur.close()
     return JsonResponse({
         'status': 'ok',
@@ -33,10 +33,29 @@ def broadcast(request):
     text = request.POST['text']
     status = request.POST['status']
     cur.execute("""INSERT INTO public.web_broadcasts
-                (national_id_id, text, "timestamp", status)
-                VALUES ('{}', '{}', '{}', {});""".format(national_id, text, datetime.datetime.now(), status))
+                (national_id_id, text, "timestamp", status)VALUES 
+                ('{}', '{}', '{}', {});""".format(national_id, text, datetime.datetime.now(), status))
     cur.close()
     return JsonResponse({
         'status': 'ok',
     }, encoder=JSONEncoder)
 
+@csrf_exempt
+def create_product(request):
+
+    name = request.POST['name']
+    order_point = int(request.POST['order_point'])
+    price = float(request.POST['price'])
+    count = int(request.POST['count'])
+    status = True if count > 0 else False
+
+    cur = connection.cursor()
+    cur.execute("""INSERT INTO public.web_products
+                (name, order_point, price, count, status)VALUES
+                ('{}', {}, {}, {}, {});""".format(name, order_point, price, count, status))
+    
+    cur.close()
+    return JsonResponse({
+        'status': 'ok',
+    }, encoder=JSONEncoder)
+    

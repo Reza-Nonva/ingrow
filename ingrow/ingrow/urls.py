@@ -22,6 +22,7 @@ from web import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('create_customer/', views.create_customer),
-    path ('broadcast/', views.broadcast)
+    path ('broadcast/', views.broadcast),
+    path('create_product/', views.create_product)
 
 ]

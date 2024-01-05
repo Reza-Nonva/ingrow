@@ -18,3 +18,12 @@ class broadcasts(models.Model):
     text = models.CharField(max_length = 256)
     status = models.BooleanField()
     timestamp = models.DateTimeField()
+
+class products(models.Model):
+    code = models.AutoField(primary_key=True)
+    price = models.FloatField()
+    order_point = models.IntegerField()
+    status = models.BooleanField()              # True is procuct is avaiable else False
+    name = models.CharField(max_length = 256)
+    count = models.IntegerField()
+
