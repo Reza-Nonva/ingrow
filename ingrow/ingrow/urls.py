@@ -21,6 +21,6 @@ from web import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #path('submit/', views.mycustom)
+    path('create_customer/', views.create_customer)
 
 ]
