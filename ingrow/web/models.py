@@ -54,3 +54,9 @@ class payments(models.Model):
     project_id = models.ForeignKey(projects, on_delete = models.CASCADE)
     amount = models.BigIntegerField()
     timestamp = models.DateTimeField()
+
+class services(models.Model):
+    code = models.AutoField(primary_key = True)
+    name = models.CharField(max_length = 256)
+    price_per_unit = models.FloatField()
+

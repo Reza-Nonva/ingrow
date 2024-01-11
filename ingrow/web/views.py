@@ -245,3 +245,52 @@ def delete_buy(request):
     return JsonResponse({
         'status': 'ok',
     }, encoder=JSONEncoder)
+
+@csrf_exempt
+def create_service(request):
+    name = request.POST['name']
+    price_per_unit = float(request.POST['price_per_unit'])
+
+    cur = connection.cursor()
+    cur.execute("""INSERT INTO public.web_services
+                (name, price_per_unit)VALUES
+                ('{}', {});""".format(name, price_per_unit))
+    
+    cur.close()
+    return JsonResponse({
+        'status': 'ok',
+    }, encoder=JSONEncoder)
+
+@csrf_exempt
+def delete_service(request):
+    code = request.POST['code']
+    cur = connection.cursor()
+    cur.execute("""DELETE FROM public.web_services
+                WHERE code = {};""".format(code))
+    cur.close()
+    return JsonResponse({
+        'status': 'ok',
+    }, encoder=JSONEncoder)
+
+@csrf_exempt
+def services_list(request):
+    cur = connection.cursor()
+    cur.execute("""SELECT *
+                FROM public.web_services""")
+    temp = cur.fetchall()
+    cur.close()
+    return JsonResponse({
+        'status': temp,
+    }, encoder=JSONEncoder)
+
+@csrf_exempt
+def products_list(request):
+    cur = connection.cursor()
+    cur.execute("""SELECT *
+                FROM public.web_products""")
+    temp = cur.fetchall()
+    cur.close()
+    return JsonResponse({
+        'status': temp,
+    }, encoder=JSONEncoder)
+
