@@ -25,9 +25,13 @@ urlpatterns = [
     path ('broadcast/', views.broadcast),
     path('create_product/', views.create_product),
     path('create_project/', views.create_project),
+    path('create_payment/', views.create_payment),
     path('insert_buy/', views.insert_buy),
     path('delete_customer/', views.delete_customer),
+    path('delete_payment/', views.delete_payment),
+    path('delete_project/', views.delete_project),
+    path('delete_buy/', views.delete_buy),
     path('customer_list/', views.customer_list),
-    path('project_list/', views.project_list)
-
+    path('project_list/', views.project_list),
+    path('project_costs/', views.get_project_costs)
 ]

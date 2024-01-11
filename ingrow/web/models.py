@@ -49,5 +49,8 @@ class buy(models.Model):
         ]
 
 
-
-
+class payments(models.Model):
+    payment_id = models.BigIntegerField(primary_key = True)
+    project_id = models.ForeignKey(projects, on_delete = models.CASCADE)
+    amount = models.BigIntegerField()
+    timestamp = models.DateTimeField()

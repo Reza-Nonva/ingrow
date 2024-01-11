@@ -158,3 +158,90 @@ def project_list(request):
         'list': x,
     }, encoder=JSONEncoder)
 
+@csrf_exempt
+def create_payment(request):
+    payment_id = request.POST['payment_id']
+    project_id = request.POST['project_id']
+    amount = request.POST['amount']
+    timestamp = datetime.datetime.now()
+    
+    cur = connection.cursor()
+    cur.execute("""INSERT INTO public.web_payments
+                (payment_id, project_id_id, amount, "timestamp") VALUES
+                ({}, {}, {}, '{}');""".format(payment_id, project_id, amount, timestamp))    
+    cur.close()
+    return JsonResponse({
+        'status': 'ok',
+    }, encoder=JSONEncoder)
+
+@csrf_exempt
+def get_project_costs(request):
+    project_id = request.POST['project_id']
+    cur = connection.cursor()
+    cur.execute("""SELECT sum(total_price)
+                FROM public.web_buy
+                WHERE project_id_id = {};""".format(project_id))   
+    temp = cur.fetchone()
+    total_costs = temp[0]
+    total_costs = int(total_costs)
+    cur.execute("""SELECT sum(amount)
+                FROM public.web_payments
+                WHERE project_id_id = {};""".format(project_id))
+    temp = cur.fetchone()
+    total_payments = temp[0]
+    total_payments = int(total_payments)
+    
+    remaining = total_costs - total_payments
+    remaining = str(remaining)  
+    cur.close()
+    return JsonResponse({
+        'status': 'ok',
+        'total costs': str(total_costs),
+        'total payments': str(total_payments),
+        'remaining': remaining,
+    }, encoder=JSONEncoder)
+
+@csrf_exempt
+def delete_payment(request):
+    payment_id = request.POST['payment_id']
+    cur = connection.cursor()
+    cur.execute("""DELETE FROM public.web_payments
+                WHERE payment_id = {}""".format(payment_id))    
+    cur.close()
+    return JsonResponse({
+        'status': 'ok',
+    }, encoder=JSONEncoder)
+
+
+@csrf_exempt
+def delete_project(request):
+    project_id = request.POST['project_id']
+    cur = connection.cursor()
+    cur.execute("""DELETE FROM public.web_projects
+                WHERE project_id = {}""".format(project_id))    
+    cur.close()
+    return JsonResponse({
+        'status': 'ok',
+    }, encoder=JSONEncoder)
+
+@csrf_exempt
+def delete_buy(request):
+    id = request.POST['id']
+    cur = connection.cursor()
+    cur.execute("""SELECT count, code_id
+                FROM public.web_buy
+                WHERE id = {}""".format(id))
+    temp = cur.fetchone()
+    back_count = int(temp[0])
+    back_code = int(temp[1])
+
+    cur.execute("""UPDATE public.web_products
+                    SET count = count + {}
+                    WHERE code = {};""".format(back_count, back_code))
+    
+    cur.execute("""DELETE FROM public.web_buy
+                WHERE id = {}""".format(id))    
+    cur.close()
+    return JsonResponse({
+        'status': 'ok',
+    }, encoder=JSONEncoder)
