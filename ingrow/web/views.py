@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from json import JSONEncoder
+import json
 from django.views.decorators.csrf import csrf_exempt
 import datetime
 # Create your views here.
@@ -118,4 +119,42 @@ def insert_buy(request):
     }, encoder=JSONEncoder)
 
 
+
+@csrf_exempt
+def delete_customer(request):
+
+    national_id = request.POST['national_id']
+
+    cur = connection.cursor()
+    cur.execute("""DELETE FROM public.web_customers
+                WHERE national_id = '{}';""".format(national_id))
+    cur.close()
+    return JsonResponse({
+        'status': 'ok',
+    }, encoder=JSONEncoder)
+
+@csrf_exempt
+def customer_list(request):
+    cur = connection.cursor()
+    cur.execute("""SELECT * 
+                FROM public.web_customers""")
+    x = cur.fetchall()
+    
+    cur.close()
+    return JsonResponse({
+        'list': x,
+    }, encoder=JSONEncoder)
+
+@csrf_exempt
+def project_list(request):
+    national_id = request.POST['national_id']
+    cur = connection.cursor()
+    cur.execute("""SELECT * 
+                FROM public.web_projects
+                WHERE national_id_id = '{}';""".format(national_id))
+    x = cur.fetchall()
+    cur.close()
+    return JsonResponse({
+        'list': x,
+    }, encoder=JSONEncoder)
 

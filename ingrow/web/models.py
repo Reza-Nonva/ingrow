@@ -29,13 +29,13 @@ class products(models.Model):
 
 class projects(models.Model):
     project_id = models.AutoField(primary_key=True)
-    national_id = models.ForeignKey(customers, on_delete = models.PROTECT)
+    national_id = models.ForeignKey(customers, on_delete = models.CASCADE)
     description = models.CharField(max_length = 1024)
 
 class buy(models.Model):
     id = models.AutoField(primary_key=True)
     code = models.ForeignKey(products, on_delete = models.PROTECT)
-    project_id = models.ForeignKey(projects, on_delete = models.PROTECT,)
+    project_id = models.ForeignKey(projects, on_delete = models.CASCADE)
     timestamp = models.DateTimeField()
     count = models.IntegerField()
     price_per_unit = models.FloatField()
@@ -47,5 +47,7 @@ class buy(models.Model):
                 fields=['id', 'code', 'project_id', 'timestamp'], name='buy_table_primary_key'
             )
         ]
+
+
 
 
