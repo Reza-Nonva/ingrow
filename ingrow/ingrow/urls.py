@@ -23,6 +23,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('create_customer/', views.create_customer),
     path ('broadcast/', views.broadcast),
-    path('create_product/', views.create_product)
+    path('create_product/', views.create_product),
+    path('create_project/', views.create_project),
+    path('insert_buy/', views.insert_buy),
+
 
 ]

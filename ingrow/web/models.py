@@ -27,3 +27,25 @@ class products(models.Model):
     name = models.CharField(max_length = 256)
     count = models.IntegerField()
 
+class projects(models.Model):
+    project_id = models.AutoField(primary_key=True)
+    national_id = models.ForeignKey(customers, on_delete = models.PROTECT)
+    description = models.CharField(max_length = 1024)
+
+class buy(models.Model):
+    id = models.AutoField(primary_key=True)
+    code = models.ForeignKey(products, on_delete = models.PROTECT)
+    project_id = models.ForeignKey(projects, on_delete = models.PROTECT,)
+    timestamp = models.DateTimeField()
+    count = models.IntegerField()
+    price_per_unit = models.FloatField()
+    total_price = models.FloatField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['id', 'code', 'project_id', 'timestamp'], name='buy_table_primary_key'
+            )
+        ]
+
+
