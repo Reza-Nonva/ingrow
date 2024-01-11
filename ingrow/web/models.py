@@ -60,3 +60,8 @@ class services(models.Model):
     name = models.CharField(max_length = 256)
     price_per_unit = models.FloatField()
 
+class works(models.Model):
+    work_id = models.AutoField(primary_key=True)
+    project_id = models.ForeignKey(projects, on_delete = models.CASCADE)
+    timestamp = models.DateTimeField()
+

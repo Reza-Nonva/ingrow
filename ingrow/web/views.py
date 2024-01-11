@@ -294,3 +294,42 @@ def products_list(request):
         'status': temp,
     }, encoder=JSONEncoder)
 
+@csrf_exempt
+def create_work(request):
+    # in this func, we just make a work template for a project
+    # report of work is stored in works_report table
+    project_id = request.POST['project_id']
+    timestamp = datetime.datetime.now()
+    cur = connection.cursor()
+    cur.execute("""INSERT INTO public.web_works
+                (project_id_id, "timestamp") VALUES
+                ({}, '{}');""".format(project_id, timestamp))
+    cur.close()
+    return JsonResponse({
+        'status': "ok",
+    }, encoder=JSONEncoder)
+
+@csrf_exempt
+def delete_work(request):
+    work_id = request.POST['work_id']
+    cur = connection.cursor()
+    cur.execute("""DELETE FROM public.web_works
+                WHERE work_id = {};""".format(work_id))
+    cur.close()
+    return JsonResponse({
+        'status': 'ok',
+    }, encoder=JSONEncoder)
+
+@csrf_exempt
+def work_list(request):
+    # return the list of works of a project
+    project_id = request.POST['project_id']
+    cur = connection.cursor()
+    cur.execute("""SELECT *
+                FROM public.web_works
+                WHERE project_id_id = {};""".format(project_id))
+    temp = cur.fetchall()
+    cur.close()
+    return JsonResponse({
+        'status': json.dumps(temp, default=str),
+    }, encoder=JSONEncoder)
