@@ -182,21 +182,38 @@ def get_project_costs(request):
                 FROM public.web_buy
                 WHERE project_id_id = {};""".format(project_id))   
     temp = cur.fetchone()
-    total_costs = temp[0]
-    total_costs = int(total_costs)
+    total_products_costs = temp[0]
+    if(total_products_costs is None):
+        total_products_costs = 0
+    total_products_costs = int(total_products_costs)
+    
+    cur.execute("""SELECT sum(total_price)
+                FROM public.web_work_report
+                WHERE work_id_id IN(SELECT work_id
+                                    FROM public.web_works w, public.web_projects p
+                                    WHERE p.project_id = w.project_id_id)
+                """)
+    temp = cur.fetchone()
+    total_works_costs = temp[0]
+    if(total_works_costs is None):
+        total_works_costs = 0
+    total_works_costs = int(total_works_costs)            
     cur.execute("""SELECT sum(amount)
                 FROM public.web_payments
                 WHERE project_id_id = {};""".format(project_id))
     temp = cur.fetchone()
     total_payments = temp[0]
+    if(total_payments is None):
+        total_payments = 0
     total_payments = int(total_payments)
     
-    remaining = total_costs - total_payments
+    remaining = total_products_costs + total_works_costs - total_payments
     remaining = str(remaining)  
     cur.close()
     return JsonResponse({
         'status': 'ok',
-        'total costs': str(total_costs),
+        'total works costs': str(total_works_costs),
+        'total product costs': str(total_products_costs),
         'total payments': str(total_payments),
         'remaining': remaining,
     }, encoder=JSONEncoder)
