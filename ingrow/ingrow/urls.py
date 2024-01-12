@@ -26,6 +26,7 @@ urlpatterns = [
     path('create_product/', views.create_product),
     path('create_service/', views.create_service),
     path('create_work/', views.create_work),
+    path('create_work_report/', views.create_work_report),
     path('create_project/', views.create_project),
     path('create_payment/', views.create_payment),
     path('insert_buy/', views.insert_buy),
@@ -34,11 +35,13 @@ urlpatterns = [
     path('delete_project/', views.delete_project),
     path('delete_service/', views.delete_service),
     path('delete_work/', views.delete_work),
+    path('delete_work_report/', views.delete_work_report),
     path('delete_buy/', views.delete_buy),
     path('customer_list/', views.customer_list),
     path('project_list/', views.project_list),
     path('products_list/', views.products_list),
     path('services_list/', views.services_list),
     path('work_list/', views.work_list),
+    path('work_report_list/', views.work_report_list),
     path('project_costs/', views.get_project_costs)
 ]

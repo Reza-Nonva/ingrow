@@ -333,3 +333,50 @@ def work_list(request):
     return JsonResponse({
         'status': json.dumps(temp, default=str),
     }, encoder=JSONEncoder)
+
+@csrf_exempt
+def create_work_report(request):
+    work_id = request.POST['work_id']
+    service_code = request.POST['service_code']
+    unit = int(request.POST['unit'])
+    
+    cur = connection.cursor()
+    cur.execute("""SELECT price_per_unit
+                FROM public.web_services
+                WHERE code = {};""".format(service_code))
+    price = cur.fetchone()
+    price =int(price[0])
+    total_price = unit * price
+
+    cur.execute("""INSERT INTO public.web_work_report
+                (work_id_id, service_code_id, unit, price_per_unit, total_price) VALUES
+                ({}, {}, {}, {}, {});""".format(work_id, service_code, unit, price, total_price))
+    cur.close()
+    return JsonResponse({
+        'status': "ok",
+    }, encoder=JSONEncoder)
+
+@csrf_exempt
+def delete_work_report(request):
+    id = request.POST['id']
+    cur = connection.cursor()
+    cur.execute("""DELETE FROM public.web_work_report
+                WHERE id = {};""".format(id))
+    cur.close()
+    return JsonResponse({
+        'status': 'ok',
+    }, encoder=JSONEncoder)
+
+@csrf_exempt
+def work_report_list(request):
+    # return the list of works_report of a work
+    work_id = request.POST['work_id']
+    cur = connection.cursor()
+    cur.execute("""SELECT *
+                FROM public.web_work_report
+                WHERE work_id_id = {};""".format(work_id))
+    temp = cur.fetchall()
+    cur.close()
+    return JsonResponse({
+        'status': json.dumps(temp, default=str),
+    }, encoder=JSONEncoder)

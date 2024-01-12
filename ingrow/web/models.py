@@ -65,3 +65,11 @@ class works(models.Model):
     project_id = models.ForeignKey(projects, on_delete = models.CASCADE)
     timestamp = models.DateTimeField()
 
+class work_report(models.Model):
+    id = models.AutoField(primary_key=True)
+    work_id = models.ForeignKey(works, on_delete = models.CASCADE)
+    service_code = models.ForeignKey(services, on_delete = models.PROTECT)
+    unit = models.FloatField()
+    price_per_unit = models.FloatField()
+    total_price = models.FloatField()
+
