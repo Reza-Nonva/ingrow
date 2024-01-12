@@ -191,8 +191,8 @@ def get_project_costs(request):
                 FROM public.web_work_report
                 WHERE work_id_id IN(SELECT work_id
                                     FROM public.web_works w, public.web_projects p
-                                    WHERE p.project_id = w.project_id_id)
-                """)
+                                    WHERE {} = w.project_id_id)
+                """.format(project_id))
     temp = cur.fetchone()
     total_works_costs = temp[0]
     if(total_works_costs is None):
