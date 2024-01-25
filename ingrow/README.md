@@ -9,4 +9,3 @@ run Django server on port 8009
 ```python
 python manage.py runserver 8009
 ```
-use API and enjoy it :)
